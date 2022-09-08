@@ -4,7 +4,7 @@ version: "3.7"
 #    v. 2.0. If a copy of the MPL was not distributed with this file, You can
 #    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
 #    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
-#    
+#
 #    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
 #    graphic logo is a trademark of OpenMRS Inc.
 
@@ -18,7 +18,7 @@ services:
             MYSQL_PASSWORD: ${OPENMRS_DB_PASSWORD:-openmrs}
             MYSQL_ROOT_PASSWORD: ${OPENMRS_DB_ROOT_PASSWORD:-openmrs}
         volumes:
-            - db-data:/var/lib/mysql
+            - ./target/openmrs-db:/var/lib/mysql
 
     openmrs-core:
         image: openmrs/openmrs-core:${TAG:-nightly}
@@ -32,10 +32,11 @@ services:
             OMRS_CONFIG_AUTO_UPDATE_DATABASE: "true"
             OMRS_CONFIG_CREATE_TABLES: "true"
             OMRS_CONFIG_CONNECTION_URL: ${OPENMRS_DB_URL}
-            OMRS_CONFIG_CONNECTION_SERVER: db
+            OMRS_CONFIG_CONNECTION_SERVER: ${OPENMRS_DB_SERVER:-db}
             OMRS_CONFIG_CONNECTION_DATABASE: ${OPENMRS_DB_NAME:-openmrs}
             OMRS_CONFIG_CONNECTION_USERNAME: ${OPENMRS_DB_USER:-openmrs}
             OMRS_CONFIG_CONNECTION_PASSWORD: ${OPENMRS_DB_PASSWORD:-openmrs}
+            OMRS_CONFIG_DELETE_PREVIOUS_ARTIFACTS: "true"
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:8080/openmrs"]
             timeout: 5s

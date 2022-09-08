@@ -126,11 +126,14 @@ ENV OMRS_CONFIG_CONNECTION_DATABASE="openmrs"
 # These environment variables are meant to enable developer settings
 # OMRS_DEV_DEBUG_PORT
 
-# Additional environment variables as needed. This should match the name of the distribution supplied OpenMRS war file
+# Additional environment variables as needed.
+# This should match the name of the distribution supplied OpenMRS war file
 ENV OMRS_WEBAPP_NAME="openmrs"
+# In case you want to keep previous artifactes, modify this
+ENV OMRS_CONFIG_DELETE_PREVIOUS_ARTIFACTS="true"
 
 RUN sed -i '/Connector port="8080"/a URIEncoding="UTF-8" relaxedPathChars="[]|" relaxedQueryChars="[]|{}^&#x5c;&#x60;&quot;&lt;&gt;"' /usr/local/tomcat/conf/server.xml
-    
+
 # Copy the app
 COPY --from=dev /app/webapp/target/openmrs.war /openmrs/distribution/openmrs_core/openmrs.war
 

@@ -38,14 +38,23 @@ TOMCAT_WORK_DIR="$TOMCAT_DIR/work"
 TOMCAT_TEMP_DIR="$TOMCAT_DIR/temp"
 TOMCAT_SETENV_FILE="$TOMCAT_DIR/bin/setenv.sh"
 
-echo "Clearing out existing directories of any previous artifacts"
+if [[ ! -d "$OMRS_DATA_DIR" || ! -w "$OMRS_DATA_DIR" ]]; then
+  echo "Directory $OMRS_DATA_DIR is not writable by this user. Exiting..."
+  exit 1
+fi
 
-rm -fR $TOMCAT_WEBAPPS_DIR/*
-rm -fR $OMRS_MODULES_DIR/*
-rm -fR $OMRS_OWA_DIR/*
-rm -fR $OMRS_CONFIG_DIR/*
-rm -fR $TOMCAT_WORK_DIR/*
-rm -fR $TOMCAT_TEMP_DIR/*
+if [[ "$OMRS_CONFIG_DELETE_PREVIOUS_ARTIFACTS" == "true" ]]; then
+  echo "Clearing out existing directories of any previous artifacts"
+
+  rm -fR $TOMCAT_WEBAPPS_DIR;
+  rm -fR $OMRS_MODULES_DIR;
+  rm -fR $OMRS_OWA_DIR
+  rm -fR $OMRS_CONFIG_DIR
+  rm -fR $TOMCAT_WORK_DIR
+  rm -fR $TOMCAT_TEMP_DIR
+
+  mkdir -p $TOMCAT_TEMP_DIR
+fi
 
 echo "Loading artifacts into appropriate locations"
 
